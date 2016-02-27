@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import psycopg2
 # Create your views here.
 def index(request):
 	if not request.session.is_empty() or request.user.is_anonymous():

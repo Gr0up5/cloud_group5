@@ -12,9 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_PATH_JOIN = lambda a, *p: os.path.join(BASE_DIR, a, *p)
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -23,9 +21,9 @@ PROJECT_PATH_JOIN = lambda a, *p: os.path.join(BASE_DIR, a, *p)
 SECRET_KEY = '^(*r6*i7(3r)l#fb=$*o9*c5*bcged38!_ji33c)ygqf$ju$h)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0','161.246.6.234']
+ALLOWED_HOSTS = ['0.0.0.0','cap-sg-prd-3.integration.ibmcloud.com']
 
 
 # Application definition
@@ -80,12 +78,20 @@ WSGI_APPLICATION = 'cloud_group5.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ATOMIC_REQUESTS': False,
+        'AUTOCOMMIT': True,
+        'CONN_MAX_AGE': 0,
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tiramisu',
         'USER': 'postgres',
         'PASSWORD': '12344321',
         'HOST': '161.246.70.75',
         'PORT': '5432',
+        'TEST_CHARSET': None,
+        'TEST_COLLATION': None,
+        'TEST_MIRROR': None,
+        'TEST_NAME': None,
+        'TIME_ZONE': 'UTC',
     }
 }
 
@@ -108,9 +114,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Database
+# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config(default='postgres://postgres:12344321@161.246.70.75/tiramisu')
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.9/topics/i18n/
+# https://docs.djangoproject.com/en/1.6/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -123,15 +133,17 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
+# Allow all host headers
+ALLOWED_HOSTS = ['*']
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = (
-    PROJECT_PATH_JOIN('static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
-# REST framework configuration
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

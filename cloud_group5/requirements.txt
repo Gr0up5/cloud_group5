@@ -1,0 +1,17 @@
+Django==1.9.2
+djangorestframework==3.3.2
+djangorestframework-jwt==1.7.2
+path.py==8.1.2
+pexpect==4.0.1
+pickleshare==0.6
+ptyprocess==0.5.1
+Pygments==2.1
+PyJWT==1.4.0
+simplegeneric==0.8.1
+traitlets==4.1.0
+wheel==0.26.0
+psycopg2==2.6.1
+dj-database-url==0.3.0
+dj-static==0.0.6
+gunicorn==18.0
+httplib2==0.8
