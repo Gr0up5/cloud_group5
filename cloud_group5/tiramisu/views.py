@@ -131,7 +131,10 @@ def change_requirements(request):
 		cube.save()
 
 		command = "python client_socket.py \'./call_model " + name.name + "\'"
-		os.system(command)
+		try:
+			os.system(command)
+		except:
+			return HttpResponseRedirect("/tiramisu/servererror")
 
 		user = User.objects.get(id=request.session['user_id'])
 		user_id = user.id
@@ -240,7 +243,10 @@ def move(request):
 	id_vm = request.GET['id']
 	current_vm = VM.objects.get(id=id_vm)
 	command = 'python client_socket.py \'./call_move ' + current_vm.name + '\''
-	os.system(command)
+	try:
+		os.system(command)
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
 	link = "../details/?id=" + id_vm
 	return HttpResponseRedirect(link)
 
@@ -296,7 +302,10 @@ def cancel(request):
 		cube.save()
 
 		command = 'python client_socket.py \'./call_model ' + name.name + '\''
-		os.system(command)
+		try:
+			os.system(command)
+		except:
+			return HttpResponseRedirect("/tiramisu/servererror")
 
 		link = "../manage?id=" + id_vm
 		return HttpResponseRedirect(link)
@@ -381,7 +390,10 @@ def createvm(request):
 			state.save()
 
 			command = 'python client_socket.py \'./call_init ' + vm_name + " " + request.POST['name'] + " " + str(user.id) + '\''
-			os.system(command)
+			try:
+				os.system(command)
+			except:
+				return HttpResponseRedirect("/tiramisu/servererror")
 
 			# wait create vm complete!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -428,7 +440,10 @@ def shutdown(request):
 		return HttpResponseRedirect("/tiramisu/servererror")
 
 	command = 'python client_socket.py \'./call_onoff shutdown ' + your_vm.name + '\''
-	os.system(command)
+	try:
+		os.system(command)
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
 
 	your_vm.status = 0
 	your_vm.save()
@@ -446,7 +461,10 @@ def start(request):
 		return HttpResponseRedirect("/tiramisu/servererror")
 
 	command = 'python client_socket.py \'./call_onoff start ' + your_vm.name + '\''
-	os.system(command)
+	try:
+		os.system(command)
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
 
 	your_vm.status = 1
 	your_vm.save()
@@ -464,7 +482,10 @@ def delete(request):
 		return HttpResponseRedirect("/tiramisu/servererror")
 
 	command = 'python client_socket.py \'./call_delete ' + your_vm.name + '\''
-	os.system(command)
+	try:
+		os.system(command)
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
 
 	state = State.objects.get(vm_name=your_vm.name)
 	state.delete()
