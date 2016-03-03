@@ -17,48 +17,104 @@
 	<form action="/tiramisu/requirements/" method="POST">
 	{% csrf_token %}
 		<input type="hidden" name="name" value={{id_vm}}>
-		<div class="box box-solid box-default">
-			<div class="box-header"><h4>Latency</h4></div>
+		
+		<div class="box box-success">
+			<div class="box-header">
+				<h3 class="box-title">Latency</h3>
+			</div>
 			<div class="box-body">
-				<div class="col-md-4">
-					<input type="number" name="latency" value="{{req.latency}}" class="form-control" placeholder="Latency">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="latency_max" value="{{req.latency_max}}" class="form-control" placeholder="Max Latency">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="percentl" value="{{req.percentl}}" class="form-control" placeholder="Percentage error">
+				<div class="row margin">
+					<div class="col-sm-2">
+						<div class="input-group">
+    						<input type="text" id="latency" name="latency" class="form-control" value="{{req.latency}}">
+    						<span class="input-group-addon">secs</span>
+						</div>
+					</div>
+					<div class="col-sm-6" onclick="latency()" id="latency_div">
+
+						<input type="text" value="" class="slider form-control" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[{{req.latency}},{{req.latency_max}}]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+
+					</div>
+					<div class="col-sm-2">
+						<div class="input-group">
+    						<input type="text" id="latency_max" name="latency_max" class="form-control" value="{{req.latency_max}}">
+    						<span class="input-group-addon">secs</span>
+						</div>						
+					</div>
+
+					<div class="col-sm-2" title="Your acceptable error percentage">
+						<div class="input-group">
+    						<input type="number" id="percentl" name="percentl" class="form-control" placeholder="Error" value="{{req.percentl}}">
+    						<span class="input-group-addon">%</span>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="box box-solid box-default">
-			<div class="box-header"><h4>IOPS</h4></div>
+
+			<div class="box-footer clearfix"></div>
+
+			<div class="box-header">
+				<h3 class="box-title">IOPS</h3>
+			</div>
 			<div class="box-body">
-				<div class="col-md-4">
-					<input type="number" name="iops_min" value="{{req.iops_min}}" class="form-control" placeholder="Min IOPS">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="iops" value="{{req.iops}}" class="form-control" placeholder="IOPS">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="percenti" value="{{req.percenti}}" class="form-control" placeholder="Percentage error">
+				<div class="row margin">
+					<div class="col-sm-2">
+						<input type="text" id="iops_min" name="iops_min" class="form-control" value="{{req.iops_min}}">
+					</div>
+					<div class="col-sm-6" onclick="iops()" id="iops_div">
+
+						<input type="text" value="" class="slider form-control" data-slider-min="0" data-slider-max="100000" data-slider-step="5" data-slider-value="[{{req.iops_min}},{{req.iops}}]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+
+					</div>
+					<div class="col-sm-2">
+						<input type="text" id="iops" name="iops" class="form-control" value="{{req.iops}}">
+					</div>
+
+					<div class="col-sm-2" title="Your acceptable error percentage">
+						<div class="input-group">
+    						<input type="number" name="percenti" class="form-control" placeholder="Error" value="{{req.percenti}}">
+    						<span class="input-group-addon">%</span>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="box box-solid box-default">
-			<div class="box-header"><h4>Cost</h4></div>
+
+			<div class="box-footer clearfix"></div>
+
+			<div class="box-header">
+				<h3 class="box-title">Cost</h3>
+			</div>
 			<div class="box-body">
-				<div class="col-md-4">
-					<input type="number" name="cost" value="{{req.cost}}" class="form-control" placeholder="Cost">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="cost_max" value="{{req.cost_max}}" class="form-control" placeholder="Max Cost">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="percentc" value="{{req.percentc}}" class="form-control" placeholder="Percentage error">
+				<div class="row margin">
+					<div class="col-sm-2">
+						<div class="input-group">
+    						<input type="text" id="cost" name="cost" class="form-control" value="{{req.cost}}">
+    						<span class="input-group-addon">THB</span>
+						</div>
+					</div>
+					<div class="col-sm-6" onclick="cost()" id="cost_div">
+
+						<input type="text" value="" class="slider form-control" data-slider-min="0" data-slider-max="2000" data-slider-step="5" data-slider-value="[{{req.cost}},{{req.cost_max}}]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+
+					</div>
+					<div class="col-sm-2">
+						<div class="input-group">
+    						<input type="text" id="cost_max" name="cost_max" class="form-control" value="{{req.cost_max}}">
+    						<span class="input-group-addon">THB</span>
+						</div>						
+					</div>
+
+					<div class="col-sm-2" title="Your acceptable error percentage">
+						<div class="input-group">
+    						<input type="number" name="percentc" class="form-control" placeholder="Error" value="{{req.percentc}}">
+    						<span class="input-group-addon">%</span>
+						</div>
+					</div>
 				</div>
 			</div>
+
 		</div>
+
 		<div class="box box-solid box-default">
 		<div class="box-header"><h4>Application type</h4></div>
 			<div class="box-body">
@@ -104,5 +160,40 @@
 	
 </section>
 
+<!-- jQuery 2.1.4 -->
+<script src="{{ STATIC_URL }}plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.5 -->
+<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="{{ STATIC_URL }}dist/js/app.min.js"></script>
+<!-- Bootstrap slider -->
+<script src="{{ STATIC_URL }}plugins/bootstrap-slider/bootstrap-slider.js"></script>
+
+<script type="text/javascript">
+
+	$('.slider').slider();
+
+
+	function latency(){
+		min = $("#latency_div .tooltip-min").text(); 
+		max = $("#latency_div .tooltip-max").text();
+		$("#latency").val(min) ; 
+		$("#latency_max").val(max);
+	}
+
+	function iops(){
+		min = $("#iops_div .tooltip-min").text(); 
+		max = $("#iops_div .tooltip-max").text();
+		$("#iops_min").val(min) ; 
+		$("#iops").val(max);
+	}
+
+	function cost(){
+		min = $("#cost_div .tooltip-min").text(); 
+		max = $("#cost_div .tooltip-max").text();
+		$("#cost").val(min) ; 
+		$("#cost_max").val(max);
+	}
+</script>
 
 {% endblock %}

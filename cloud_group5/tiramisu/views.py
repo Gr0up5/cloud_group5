@@ -27,8 +27,8 @@ def index(request):
 def home(request):
 	return render(request,'home.html')
 
-def login(request):
-	return render(request,'login.html')
+def registerpage(request):
+	return render(request,'regist.html')
 
 def loginsuccess(request):
 	usr = request.POST['username']
@@ -197,7 +197,7 @@ def registersuccess(request):
 	passwd = request.POST['password']
 	user = User.objects.create_user(usr, '', passwd)
 	user.save()
-	return HttpResponseRedirect('/tiramisu/login/')
+	return HttpResponseRedirect('/')
 
 def showdetails(request):
 	user = User.objects.get(id=request.session['user_id'])

@@ -6,12 +6,8 @@
 <section class="content-header">
 	<h1>
 		Create VM
-		<small>Optional description</small>
+		<small></small>
 	</h1>
-	<ol class="breadcrumb">
-		<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-		<li class="active">Here</li>
-	</ol>
 </section>
 
 <!-- Main content -->
@@ -19,59 +15,109 @@
 	<br>
 	<form action="/tiramisu/createvm/" method="POST">
 	{% csrf_token %}
-		<div class="box box-solid box-default">
-			<div class="box-header"><h4>VM name</h4></div>
+
+		<div class="box box-success">
+
+			<div class="box-header">
+				<h3 class="box-title">VM name</h3>
+			</div>
 			<div class="box-body">
-				<div class="col-md-8" id="text_input_name">
-					<input type="text" name="name" id="vm_name" class="form-control" placeholder="VM name">
-				</div>
-				<div class="col-md-4">
-					<button type="button" class="btn btn-default" id="btn_check"><i class="fa fa-check"></i>check</button>
+				<div class="row margin">
+					<div class="col-md-8" id="text_input_name">
+						<input type="text" name="name" id="vm_name" class="form-control" placeholder="VM name">
+					</div>
+					<div class="col-md-4">
+						<button type="button" class="btn btn-default" id="btn_check"><i class="fa fa-check"></i>check</button>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="box box-solid box-default">
-			<div class="box-header"><h4>Latency</h4></div>
+
+			<div class="box-footer clearfix"></div>
+
+			<div class="box-header">
+				<h3 class="box-title">Latency</h3>
+			</div>
 			<div class="box-body">
-				<div class="col-md-4">
-					<input type="number" name="latency" class="form-control" placeholder="Latency">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="latency_max" class="form-control" placeholder="Max Latency">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="percentl" class="form-control" placeholder="Percentage error">
+				<div class="row margin">
+					<div class="col-sm-2">
+						<input type="text" id="latency" name="latency" class="form-control" placeholder="Min IOPS" value="0" >
+					</div>
+					<div class="col-sm-6" onclick="latency()" id="latency_div">
+
+						<input id="slider" type="text" value="" class="slider form-control" data-slider-min="0" data-slider-max="100000" data-slider-step="5" data-slider-value="[0,100000]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+
+					</div>
+					<div class="col-sm-2">
+						<input type="text" id="latency_max" name="latency_max" class="form-control" placeholder="Min IOPS" value="100000" >
+					</div>
+
+					<div class="col-sm-1" title="Your acceptable error percentage">
+						<input type="number" name="percentl" class="form-control" placeholder="Error">
+					</div>
+					<div class="col-sm-1">
+						%
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="box box-solid box-default">
-			<div class="box-header"><h4>IOPS</h4></div>
+
+			<div class="box-footer clearfix"></div>
+
+			<div class="box-header">
+				<h3 class="box-title">IOPS</h3>
+			</div>
 			<div class="box-body">
-				<div class="col-md-4">
-					<input type="number" name="iops_min" class="form-control" placeholder="Min IOPS">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="iops" class="form-control" placeholder="IOPS">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="percenti" class="form-control" placeholder="Percentage error">
+				<div class="row margin">
+					<div class="col-sm-2">
+						<input type="text" id="iops_min" name="iops_min" class="form-control" value="0" >
+					</div>
+					<div class="col-sm-6" onclick="iops()" id="iops_div">
+
+						<input id="slider" type="text" value="" class="slider form-control" data-slider-min="0" data-slider-max="100000" data-slider-step="5" data-slider-value="[0,100000]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+
+					</div>
+					<div class="col-sm-2">
+						<input type="text" id="iops" name="iops" class="form-control" value="100000" >
+					</div>
+
+					<div class="col-sm-1" title="Your acceptable error percentage">
+						<input type="number" name="percenti" class="form-control" placeholder="Error">
+					</div>
+					<div class="col-sm-1">
+						%
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="box box-solid box-default">
-			<div class="box-header"><h4>Cost</h4></div>
+
+			<div class="box-footer clearfix"></div>
+
+			<div class="box-header">
+				<h3 class="box-title">Cost</h3>
+			</div>
 			<div class="box-body">
-				<div class="col-md-4">
-					<input type="number" name="cost" class="form-control" placeholder="Cost">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="cost_max" class="form-control" placeholder="Max Cost">
-				</div>
-				<div class="col-md-4">
-					<input type="number" name="percentc" class="form-control" placeholder="Percentage error">
+				<div class="row margin">
+					<div class="col-sm-2">
+						<input type="text" id="cost" name="cost" class="form-control" value="0" >
+					</div>
+					<div class="col-sm-6" onclick="cost()" id="cost_div">
+
+						<input id="slider" type="text" value="" class="slider form-control" data-slider-min="0" data-slider-max="100000" data-slider-step="5" data-slider-value="[0,100000]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red" >
+
+					</div>
+					<div class="col-sm-2">
+						<input type="text" id="cost_max" name="cost_max" class="form-control" value="100000" >
+					</div>
+
+					<div class="col-sm-1" title="Your acceptable error percentage">
+						<input type="number" name="percentc" class="form-control" placeholder="Error">
+					</div>
+					<div class="col-sm-1">
+						%
+					</div>
 				</div>
 			</div>
+
 		</div>
+
 		<div class="box box-solid box-default">
 		<div class="box-header"><h4>Application type</h4></div>
 			<div class="box-body">
@@ -100,7 +146,16 @@
 	</form>
 	
 </section>
+
+<!-- jQuery 2.1.4 -->
 <script src="{{ STATIC_URL }}plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.5 -->
+<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="{{ STATIC_URL }}dist/js/app.min.js"></script>
+<!-- Bootstrap slider -->
+<script src="{{ STATIC_URL }}plugins/bootstrap-slider/bootstrap-slider.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function () {
   //your code here
@@ -127,6 +182,29 @@
 	});
 	});
 
+	$('.slider').slider();
+
+
+	function latency(){
+		min = $("#latency_div .tooltip-min").text(); 
+		max = $("#latency_div .tooltip-max").text();
+		$("#latency").val(min) ; 
+		$("#latency_max").val(max);
+	}
+
+	function iops(){
+		min = $("#iops_div .tooltip-min").text(); 
+		max = $("#iops_div .tooltip-max").text();
+		$("#iops_min").val(min) ; 
+		$("#iops").val(max);
+	}
+
+	function cost(){
+		min = $("#cost_div .tooltip-min").text(); 
+		max = $("#cost_div .tooltip-max").text();
+		$("#cost").val(min) ; 
+		$("#cost_max").val(max);
+	}
 </script>
 
 {% endblock %}
