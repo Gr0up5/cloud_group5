@@ -9,8 +9,10 @@ clientsocket.send(sys.argv[1])
 while True:
 	reply = clientsocket.recv(131072)
 
-	if reply == '1':
+	if reply == '0':
+		# success
 		sys.exit(0)
 
 	else:
+		# fail
 		sys.exit(1)

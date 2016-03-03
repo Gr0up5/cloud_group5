@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import psycopg2
+import time
 # Create your views here.
 def index(request):
 	if not request.session.is_empty() or request.user.is_anonymous():
@@ -92,7 +93,7 @@ def cal_percent(pc, data):
 
 def change_requirements(request):
 	try:
-		subprocess.check_call(['python','client_socket.py','./check_connection_model'])
+		subprocess.check_call(['python','client_socket_check.py','./check_connection_model'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
@@ -130,9 +131,9 @@ def change_requirements(request):
 		cube.app_type 		= request.POST['type']
 		cube.save()
 
-		command = "python client_socket.py \'./call_model " + name.name + "\'"
 		try:
-			os.system(command)
+			command = './call_model ' + name.name
+			subprocess.check_call(['python','client_socket_call.py',command])
 		except:
 			return HttpResponseRedirect("/tiramisu/servererror")
 
@@ -236,15 +237,15 @@ def showdetails(request):
 
 def move(request):
 	try:
-		subprocess.check_call(['python','client_socket.py','./check_connection_move'])
+		subprocess.check_call(['python','client_socket_check.py','./check_connection_move'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
 	id_vm = request.GET['id']
 	current_vm = VM.objects.get(id=id_vm)
-	command = 'python client_socket.py \'./call_move ' + current_vm.name + '\''
 	try:
-		os.system(command)
+		command = './call_move ' + current_vm.name
+		subprocess.check_call(['python','client_socket_call.py',command])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 	link = "../details/?id=" + id_vm
@@ -301,9 +302,9 @@ def cancel(request):
 		cube.app_type 		= request.POST['type']
 		cube.save()
 
-		command = 'python client_socket.py \'./call_model ' + name.name + '\''
 		try:
-			os.system(command)
+			command = './call_model ' + name.name
+			subprocess.check_call(['python','client_socket_call.py',command])
 		except:
 			return HttpResponseRedirect("/tiramisu/servererror")
 
@@ -328,7 +329,7 @@ def vmname_availability(request):
 
 def createvm(request):
 	try:
-		subprocess.check_call(['python','client_socket.py','./check_connection_init'])
+		subprocess.check_call(['python','client_socket_check.py','./check_connection_init'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
@@ -388,14 +389,24 @@ def createvm(request):
 			state.latency_ssd	= 8
 			state.iops_ssd		= 8
 			state.save()
-
-			command = 'python client_socket.py \'./call_init ' + vm_name + " " + request.POST['name'] + " " + str(user.id) + '\''
+			
 			try:
-				os.system(command)
+				command = './call_init ' + vm_name + ' ' + request.POST['name'] + ' ' + str(user.id)
+				subprocess.check_call(['python','client_socket_call.py',command])
 			except:
 				return HttpResponseRedirect("/tiramisu/servererror")
 
-			# wait create vm complete!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			# timeout = time.time() + 60*5   # 5 minutes from now
+			# complete_init = 0
+			# while True:
+			# 	p = subprocess.Popen(['./check_complete_init', your_vm.name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			# 	status, err = p.communicate()
+			# 	if status == "shut" or status == "running" or time.time() > timeout:
+			# 		complete_init = 1
+			# 		break
+
+			# if complete_init == 0:
+			# 	return HttpResponseRedirect("/tiramisu/servererror")
 
 			vm = VM.objects.get(name=vm_name)
 			link = "/tiramisu/createvmsuccess/?id=" + str(vm.id)
@@ -435,13 +446,13 @@ def shutdown(request):
 	your_vm = VM.objects.get(id=id_vm)
 
 	try:
-		subprocess.check_call(['python','client_socket.py','./check_connection'])
+		subprocess.check_call(['python','client_socket_check.py','./check_connection'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
-	command = 'python client_socket.py \'./call_onoff shutdown ' + your_vm.name + '\''
 	try:
-		os.system(command)
+		command = './call_onoff shutdown' + ' ' + your_vm.name
+		subprocess.check_call(['python','client_socket_call.py',command])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
@@ -456,13 +467,13 @@ def start(request):
 	your_vm = VM.objects.get(id=id_vm)
 
 	try:
-		subprocess.check_call(['python','client_socket.py','./check_connection'])
+		subprocess.check_call(['python','client_socket_check.py','./check_connection'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
-	command = 'python client_socket.py \'./call_onoff start ' + your_vm.name + '\''
 	try:
-		os.system(command)
+		command = './call_onoff start ' + your_vm.name
+		subprocess.check_call(['python','client_socket_call.py',command])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
@@ -477,13 +488,13 @@ def delete(request):
 	your_vm = VM.objects.get(id=id_vm)
 
 	try:
-		subprocess.check_call(['python','client_socket.py','./check_connection_delete'])
+		subprocess.check_call(['python','client_socket_check.py','./check_connection_delete'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
-	command = 'python client_socket.py \'./call_delete ' + your_vm.name + '\''
 	try:
-		os.system(command)
+		command = './call_delete ' + your_vm.name
+		subprocess.check_call(['python','client_socket_call.py',command])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
