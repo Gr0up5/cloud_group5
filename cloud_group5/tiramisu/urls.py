@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^checkavl/$', views.vmname_availability, name='vmname_availability'),
     url(r'^createvmsuccess/$', views.createvmsuccess, name='createvmsuccess'),
     url(r'^servererror/$', views.servererror, name='servererror'),
+    url(r'^diskfull/$', views.diskfull, name='diskfull'),
     url(r'^shutdown/$', views.shutdown, name='shutdown'),
     url(r'^start/$', views.start, name='start'),
     url(r'^delete/$', views.delete, name='delete'),

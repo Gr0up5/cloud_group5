@@ -329,6 +329,12 @@ def vmname_availability(request):
 
 def createvm(request):
 	try:
+		subprocess.check_call(['python','client_socket_check.py','./check_disk_space'])
+	except:
+		return HttpResponseRedirect("/tiramisu/diskfull")
+
+		
+	try:
 		subprocess.check_call(['python','client_socket_check.py','./check_connection_init'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
@@ -431,6 +437,18 @@ def createvmsuccess(request):
 
 def servererror(request):
 	template = loader.get_template('500page.html')
+	user = User.objects.get(id=request.session['user_id'])
+	user_id = user.id
+	vm = VM.objects.filter(owner=user_id)
+	context = RequestContext(request, {
+		'name': user.username,
+		'id': user.id,
+		'vm_list': vm,
+	})
+	return HttpResponse(template.render(context))
+
+def diskfull(request):
+	template = loader.get_template('error_disk_full.html')
 	user = User.objects.get(id=request.session['user_id'])
 	user_id = user.id
 	vm = VM.objects.filter(owner=user_id)
