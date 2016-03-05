@@ -13,7 +13,7 @@
 <!-- Main content -->
 <section class="content">
 	<br>
-	<form action="/tiramisu/createvm/" method="POST">
+	<form action="/tiramisu/createvm/" method="POST" id="form">
 		{% csrf_token %}
 
 		<div class="box box-success">
@@ -168,37 +168,38 @@
 <script src="{{ STATIC_URL }}plugins/bootstrap-slider/bootstrap-slider.js"></script>
 
 <script type="text/javascript">
-	$(document).ready(function () {
-  //your code here
-  $("#btn_check").click(function(){
-  	vm_name = $("#vm_name").val();
-  	console.log(vm_name);
-  	if (vm_name.length != 0){
-  		if(vm_name.includes(" ")){
-	  		alert("This name contain ' '.");
-	  		$("#btn_check").addClass("btn-danger");
+$(document).ready(function () {
+
+  	$("#btn_check").click(function(){
+  		vm_name = $("#vm_name").val();
+  		if (vm_name.length != 0){
+  			if(vm_name.includes(" ")){
+	  			alert("This name contain ' '.");
+	  			$("#btn_check").addClass("btn-danger");
+	  			$("#text_input_name").addClass("has-error");
+  			}
+  			else{	
+	  			$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
+	  				$("#btn_check").removeClass("btn-default btn-danger btn-success");
+	  				$("#text_input_name").removeClass("has-error has-success");
+	  				if (data.result == "pos"){ 
+	  					$("#btn_check").addClass("btn-success");
+	  					$("#text_input_name").addClass("has-success");
+	  				}
+	  				else { 
+	  					alert("This name is already in use.")
+	  					$("#btn_check").addClass("btn-danger");
+	  					$("#text_input_name").addClass("has-error");
+	  				}
+	  			});
+  			}
+  		}
+  		else{
+  			alert("Plese enter your VM name!");
+  			$("#btn_check").addClass("btn-danger");
 	  		$("#text_input_name").addClass("has-error");
   		}
-  		else{	
-	  		$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
-	  			$("#btn_check").removeClass("btn-default btn-danger btn-success");
-	  			$("#text_input_name").removeClass("has-error has-success");
-	  			if (data.result == "pos"){ 
-	  				$("#btn_check").addClass("btn-success");
-	  				$("#text_input_name").addClass("has-success");
-	  			}
-	  			else { 
-	  				alert("This name is already in use.")
-	  				$("#btn_check").addClass("btn-danger");
-	  				$("#text_input_name").addClass("has-error");
-	  			}
-	  		});
-  		}
-  	}
-  	else{
-  		alert("Plese enter your VM name!"); 
-  	}
-  });
+  	});
 });
 
 	$('.slider').slider();

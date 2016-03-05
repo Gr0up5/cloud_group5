@@ -93,11 +93,19 @@ def cal_percent(pc, data):
 
 def change_requirements(request):
 	try:
+		subprocess.check_call(['python','client_socket_check.py','./check_disk_space'])
+	except:
+		return HttpResponseRedirect("/tiramisu/diskfull")
+
+	try:
 		subprocess.check_call(['python','client_socket_check.py','./check_connection_model'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
 	if request.method == 'POST':
+		if request.POST['latency'] == '0' and request.POST['latency_max'] == '0' and request.POST['iops_min'] == '0' and request.POST['iops'] == '0' and request.POST['cost_max'] == '0' and request.POST['cost'] == '0':
+			return HttpResponseRedirect("/tiramisu/servererror")
+
 		id_vm 	= request.POST['name']
 		name = VM.objects.get(pk=id_vm)
 		req = Requirements.objects.get(pk=name.name)
@@ -237,6 +245,11 @@ def showdetails(request):
 
 def move(request):
 	try:
+		subprocess.check_call(['python','client_socket_check.py','./check_disk_space'])
+	except:
+		return HttpResponseRedirect("/tiramisu/diskfull")
+
+	try:
 		subprocess.check_call(['python','client_socket_check.py','./check_connection_move'])
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
@@ -327,12 +340,25 @@ def vmname_availability(request):
 				response_data = {'result' : 'neg'}
 			return JsonResponse(response_data)
 
+@csrf_exempt
+def checkusername(request):
+	if request.method == 'POST':
+		username = request.POST.get('username')
+		try:
+			user = User.objects.get(username=username)
+		except User.DoesNotExist:
+			user = None
+		if user == None:
+			response_data = {'result' : 'pos'}
+		else:
+			response_data = {'result' : 'neg'}
+		return JsonResponse(response_data)
+
 def createvm(request):
 	try:
 		subprocess.check_call(['python','client_socket_check.py','./check_disk_space'])
 	except:
 		return HttpResponseRedirect("/tiramisu/diskfull")
-
 		
 	try:
 		subprocess.check_call(['python','client_socket_check.py','./check_connection_init'])
@@ -354,6 +380,9 @@ def createvm(request):
    			return HttpResponse(template.render(context))
 
 		if request.method == 'POST':
+			if request.POST['latency'] == '0' and request.POST['latency_max'] == '0' and request.POST['iops_min'] == '0' and request.POST['iops'] == '0' and request.POST['cost_max'] == '0' and request.POST['cost'] == '0':
+				return HttpResponseRedirect("/tiramisu/servererror")
+
 			vm_name = str(user.id)+request.POST['name']
 			req = Requirements()
 			req.vm_name		= vm_name
