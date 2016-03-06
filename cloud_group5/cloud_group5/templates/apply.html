@@ -30,7 +30,7 @@
 					</div>
 					<div class="col-sm-6" onclick="latency()" id="latency_div">
 
-						<input type="text" value="" class="slider form-control" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[{{req.latency}},{{req.latency_max}}]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+						<input type="text" value="" class="slider form-control" data-slider-min="0" data-slider-max="120" data-slider-step="0.5" data-slider-value="[{{req.latency}},{{req.latency_max}}]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
 
 					</div>
 					<div class="col-sm-2">
@@ -165,7 +165,7 @@
 				<p>Latency</p>
 			</div>
 			<div class="col-md-10">
-				<p class="info-box-number">{{ appropiate_latency }} ms</p>
+				<p class="info-box-number">{{ appropiate_latency }} secs</p>
 			</div>
 			<div class="col-md-2">
 				<p>IOPS</p>
