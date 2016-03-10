@@ -417,12 +417,12 @@ def createvm(request):
 
 			state = State()
 			state.vm_name		= vm_name
-			state.latency 		= 8
-			state.iops 			= 8
-			state.latency_hdd	= 8
-			state.iops_hdd		= 8
-			state.latency_ssd	= 8
-			state.iops_ssd		= 8
+			state.latency 		= 15
+			state.iops 			= 800
+			state.latency_hdd	= 15
+			state.iops_hdd		= 800
+			state.latency_ssd	= 4
+			state.iops_ssd		= 3000
 			state.save()
 			
 			try:
