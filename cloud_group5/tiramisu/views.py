@@ -454,34 +454,23 @@ def wait_create(request):
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
-
-	# vm_name = request.GET['id']
-	# while True:
-	# 	try:
-	# 		subprocess.check_call(['python','client_socket_check.py','./check_complete_init',vm_name])
-	# 		break
-	# 	except:
-	# 		pass
-
-	# vm = VM.objects.get(name=vm_name)
-	# link = "/tiramisu/createvmsuccess/?id=" + str(vm.id)
-	# return HttpResponseRedirect(link)
-
 def createvmsuccess(request):
-	user = User.objects.get(id=request.session['user_id'])
-	user_id = user.id
-	# id_vm = request.GET['id']
-	vm_name = str(user_id)+request.GET['vm_name']
-	your_vm = VM.objects.get(name=vm_name)
-	template = loader.get_template('createvmsuccess.html')
-	vm = VM.objects.filter(owner=user_id)
-	context = RequestContext(request, {
-		'name': user.username,
-		'id': user.id,
-		'vm_list': vm,
-		'ip': your_vm.ip,
-	})
-   	return HttpResponse(template.render(context))
+	try:
+		user = User.objects.get(id=request.session['user_id'])
+		user_id = user.id
+		vm_name = str(user_id)+request.GET['vm_name']
+		your_vm = VM.objects.get(name=vm_name)
+		template = loader.get_template('createvmsuccess.html')
+		vm = VM.objects.filter(owner=user_id)
+		context = RequestContext(request, {
+			'name': user.username,
+			'id': user.id,
+			'vm_list': vm,
+			'ip': your_vm.ip,
+		})
+	   	return HttpResponse(template.render(context))
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
 
 def servererror(request):
 	template = loader.get_template('500page.html')

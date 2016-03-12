@@ -1,65 +1,67 @@
-{% extends "starter.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="icon" href="{{ STATIC_URL }}Tiramisu.png">
+	<title>Creating...</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.5 -->
+	<link rel="stylesheet" href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="{{STATIC_URL}}dist/css/AdminLTE.min.css">
+	<!-- iCheck -->
+	<link rel="stylesheet" href="{{STATIC_URL}}plugins/iCheck/square/blue.css">
 
-{% block content %}
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition login-page">
+	<div class="login-box">
+		<p hidden id="vm_name" >{{ vm_name }}</p>
 
+		<div class="overlay text-center">
+  			<h1><i class="fa fa-refresh fa-spin"></i></h1>
+  			<h4>Creating new VM... please wait</h4>
+		</div>
+	</div>
 
-<section class="content-header">
-</section>
+	<!-- Bootstrap 3.3.5 -->
+	<script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
 
-<!-- Main content -->
-<section class="content">
-	<br>
-	
-	    <h4>Creating...please wait</h4>
-	    <p id="vm_name" >{{ vm_name }}</p>
+	<!-- jQuery 2.1.4 -->
+	<script src="{{ STATIC_URL }}plugins/jQuery/jQuery-2.1.4.min.js"></script>
 
-	    	<div class="overlay text-center">
-  				<h1><i class="fa fa-refresh fa-spin"></i></h1>
-  				<h6>Creating...please wait</h6>
-	  		</div>
-	    	<div class="col-md-10"></div>
-</section>
+	<script type="text/javascript">
 
-<!-- jQuery 2.1.4 -->
-<script src="{{ STATIC_URL }}plugins/jQuery/jQuery-2.1.4.min.js"></script>
+		vm_name = $("#vm_name").text();
+		console.log(vm_name);
+		setInterval(function(){
+			$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
+			  	if (data.result == "neg"){
+			  		// create complete
+			  		alert("Create new VM complete!.")
+			  		console.log("complete")
+			  		str1 = "http://tiramisu.mybluemix.net/tiramisu/createvmsuccess/?vm_name="
+			  		link = str1.concat(vm_name)
+			  		window.location.assign(link)
+			  	}
+			  	else {
+			  		console.log("not complete")
+			  	}
+			});
+		}, 3000);
 
-<script type="text/javascript">
-vm_name = $("#vm_name").text();
-console.log(vm_name);
-// $(document).ready(function () {
-// 	vm_name = $("#vm_name").val();
-// 	while (true) {
-// 		$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
-// 	  		if (data.result == "neg"){
-// 	  			// create complete
-// 	  			alert("Create new VM complete!.")
-// 	  			console.log("complete")
-// 	  			$.post("tiramisu/createvmsuccess/", {vm_name: vm_name})
-// 	  		}
-// 	  		else {
-// 	  			console.log("not complete")
-// 	  		}
-// 	  	});
-// 	}
-  		
-// });
-setInterval(function(){
-	$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
-	  	if (data.result == "neg"){
-	  		// create complete
-	  		alert("Create new VM complete!.")
-	  		console.log("complete")
-	  		str1 = "http://tiramisu.mybluemix.net/tiramisu/createvmsuccess/?vm_name="
-	  		link = str1.concat(vm_name)
-	  		window.location.assign(link)
-	  	}
-	  	else {
-	  		console.log("not complete")
-	  	}
-	});
-}, 3000);
+	</script>
 
-</script>
-
-
-{% endblock %}
+</body>
+</html>
