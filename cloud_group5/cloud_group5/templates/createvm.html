@@ -41,7 +41,7 @@
 					<div class="col-sm-2">
 						<div class="input-group">
 							<input type="number" id="latency" name="latency" class="form-control" value="0">
-							<span class="input-group-addon">secs</span>
+							<span class="input-group-addon">ms</span>
 						</div>
 					</div>
 					<div class="col-sm-6" onclick="latency()" id="latency_div">
@@ -52,7 +52,7 @@
 					<div class="col-sm-2">
 						<div class="input-group">
 							<input type="number" id="latency_max" name="latency_max" class="form-control" value="120">
-							<span class="input-group-addon">secs</span>
+							<span class="input-group-addon">ms</span>
 						</div>						
 					</div>
 
@@ -68,12 +68,15 @@
 			<div class="box-footer clearfix"></div>
 
 			<div class="box-header">
-				<h3 class="box-title">IOPS</h3>
+				<h3 class="box-title">Throughput</h3>
 			</div>
 			<div class="box-body">
 				<div class="row margin">
 					<div class="col-sm-2">
-						<input type="number" id="iops_min" name="iops_min" class="form-control" value="0">
+						<div class="input-group">
+							<input type="number" id="iops_min" name="iops_min" class="form-control" value="0">
+							<span class="input-group-addon">IOPS</span>
+						</div>
 					</div>
 					<div class="col-sm-6" onclick="iops()" id="iops_div">
 
@@ -81,7 +84,10 @@
 
 					</div>
 					<div class="col-sm-2">
-						<input type="number" id="iops" name="iops" class="form-control" value="100000">
+						<div class="input-group">
+							<input type="number" id="iops" name="iops" class="form-control" value="100000">
+							<span class="input-group-addon">IOPS</span>
+						</div>
 					</div>
 
 					<div class="col-sm-2" title="Your acceptable error percentage">

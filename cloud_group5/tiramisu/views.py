@@ -427,34 +427,53 @@ def createvm(request):
 			
 			try:
 				command = './call_init ' + vm_name + ' ' + request.POST['name'] + ' ' + str(user.id)
-				subprocess.check_call(['python','client_socket_call.py',command])
+				subprocess.check_call(['python','client_socket_init.py',command])
+				link = "/tiramisu/wait_create/?vm_name=" + request.POST['name']
+				return HttpResponseRedirect(link)
 			except:
 				return HttpResponseRedirect("/tiramisu/servererror")
 
-			# timeout = time.time() + 60*5   # 5 minutes from now
-			# complete_init = 0
-			# while True:
-			# 	p = subprocess.Popen(['./check_complete_init', your_vm.name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-			# 	status, err = p.communicate()
-			# 	if status == "shut" or status == "running" or time.time() > timeout:
-			# 		complete_init = 1
-			# 		break
-
-			# if complete_init == 0:
-			# 	return HttpResponseRedirect("/tiramisu/servererror")
-
-			vm = VM.objects.get(name=vm_name)
-			link = "/tiramisu/createvmsuccess/?id=" + str(vm.id)
-			return HttpResponseRedirect(link)
 	else:
 		return HttpResponseRedirect('tiramisu/login')
 
+@csrf_exempt
+def wait_create(request):
+	try:
+		vm_name = request.GET['vm_name']
+		template = loader.get_template('wait_create.html')
+		user = User.objects.get(id=request.session['user_id'])
+		user_id = user.id
+		vm = VM.objects.filter(owner=user_id)
+		context = RequestContext(request, {
+			'name': user.username,
+			'id': user.id,
+			'vm_list': vm,
+			'vm_name':vm_name
+		})
+		return HttpResponse(template.render(context))
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
+
+
+	# vm_name = request.GET['id']
+	# while True:
+	# 	try:
+	# 		subprocess.check_call(['python','client_socket_check.py','./check_complete_init',vm_name])
+	# 		break
+	# 	except:
+	# 		pass
+
+	# vm = VM.objects.get(name=vm_name)
+	# link = "/tiramisu/createvmsuccess/?id=" + str(vm.id)
+	# return HttpResponseRedirect(link)
+
 def createvmsuccess(request):
-	id_vm = request.GET['id']
-	your_vm = VM.objects.get(id=id_vm)
-	template = loader.get_template('createvmsuccess.html')
 	user = User.objects.get(id=request.session['user_id'])
 	user_id = user.id
+	# id_vm = request.GET['id']
+	vm_name = str(user_id)+request.GET['vm_name']
+	your_vm = VM.objects.get(name=vm_name)
+	template = loader.get_template('createvmsuccess.html')
 	vm = VM.objects.filter(owner=user_id)
 	context = RequestContext(request, {
 		'name': user.username,

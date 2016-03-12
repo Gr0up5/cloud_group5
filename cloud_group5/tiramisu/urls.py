@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^createvm/$', views.createvm, name='createvm'),
     url(r'^checkavl/$', views.vmname_availability, name='vmname_availability'),
     url(r'^checkusername/$', views.checkusername, name='checkusername'),
+    url(r'^wait_create/$', views.wait_create, name='wait_create'),
     url(r'^createvmsuccess/$', views.createvmsuccess, name='createvmsuccess'),
     url(r'^servererror/$', views.servererror, name='servererror'),
     url(r'^diskfull/$', views.diskfull, name='diskfull'),

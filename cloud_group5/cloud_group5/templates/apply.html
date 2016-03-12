@@ -25,7 +25,7 @@
 					<div class="col-sm-2">
 						<div class="input-group">
     						<input type="text" id="latency" name="latency" class="form-control" value="{{req.latency}}">
-    						<span class="input-group-addon">secs</span>
+    						<span class="input-group-addon">ms</span>
 						</div>
 					</div>
 					<div class="col-sm-6" onclick="latency()" id="latency_div">
@@ -36,7 +36,7 @@
 					<div class="col-sm-2">
 						<div class="input-group">
     						<input type="text" id="latency_max" name="latency_max" class="form-control" value="{{req.latency_max}}">
-    						<span class="input-group-addon">secs</span>
+    						<span class="input-group-addon">ms</span>
 						</div>						
 					</div>
 
@@ -52,12 +52,15 @@
 			<div class="box-footer clearfix"></div>
 
 			<div class="box-header">
-				<h3 class="box-title">IOPS</h3>
+				<h3 class="box-title">Throughput</h3>
 			</div>
 			<div class="box-body">
 				<div class="row margin">
 					<div class="col-sm-2">
-						<input type="text" id="iops_min" name="iops_min" class="form-control" value="{{req.iops_min}}">
+						<div class="input-group">
+							<input type="text" id="iops_min" name="iops_min" class="form-control" value="{{req.iops_min}}">
+							<span class="input-group-addon">IOPS</span>
+						</div>
 					</div>
 					<div class="col-sm-6" onclick="iops()" id="iops_div">
 
@@ -65,7 +68,10 @@
 
 					</div>
 					<div class="col-sm-2">
-						<input type="text" id="iops" name="iops" class="form-control" value="{{req.iops}}">
+						<div class="input-group">
+							<input type="text" id="iops" name="iops" class="form-control" value="{{req.iops}}">
+							<span class="input-group-addon">IOPS</span>
+						</div>
 					</div>
 
 					<div class="col-sm-2" title="Your acceptable error percentage">
@@ -165,13 +171,13 @@
 				<p>Latency</p>
 			</div>
 			<div class="col-md-10">
-				<p class="info-box-number">{{ appropiate_latency }} secs</p>
+				<p class="info-box-number">{{ appropiate_latency }} ms</p>
 			</div>
 			<div class="col-md-2">
-				<p>IOPS</p>
+				<p>Throughput</p>
 			</div>
 			<div class="col-md-10">
-				<p class="info-box-number">{{ appropiate_iops }}</p>
+				<p class="info-box-number">{{ appropiate_iops }} IOPS</p>
 			</div>
 			<div class="col-md-2">
 				<p>Cost</p>

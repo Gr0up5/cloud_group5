@@ -1,0 +1,65 @@
+{% extends "starter.html" %}
+
+{% block content %}
+
+
+<section class="content-header">
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<br>
+	
+	    <h4>Creating...please wait</h4>
+	    <p id="vm_name" >{{ vm_name }}</p>
+
+	    	<div class="overlay text-center">
+  				<h1><i class="fa fa-refresh fa-spin"></i></h1>
+  				<h6>Creating...please wait</h6>
+	  		</div>
+	    	<div class="col-md-10"></div>
+</section>
+
+<!-- jQuery 2.1.4 -->
+<script src="{{ STATIC_URL }}plugins/jQuery/jQuery-2.1.4.min.js"></script>
+
+<script type="text/javascript">
+vm_name = $("#vm_name").text();
+console.log(vm_name);
+// $(document).ready(function () {
+// 	vm_name = $("#vm_name").val();
+// 	while (true) {
+// 		$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
+// 	  		if (data.result == "neg"){
+// 	  			// create complete
+// 	  			alert("Create new VM complete!.")
+// 	  			console.log("complete")
+// 	  			$.post("tiramisu/createvmsuccess/", {vm_name: vm_name})
+// 	  		}
+// 	  		else {
+// 	  			console.log("not complete")
+// 	  		}
+// 	  	});
+// 	}
+  		
+// });
+setInterval(function(){
+	$.post( "/tiramisu/checkavl/", { vm_name: vm_name  }).done(function( data ) {
+	  	if (data.result == "neg"){
+	  		// create complete
+	  		alert("Create new VM complete!.")
+	  		console.log("complete")
+	  		str1 = "http://tiramisu.mybluemix.net/tiramisu/createvmsuccess/?vm_name="
+	  		link = str1.concat(vm_name)
+	  		window.location.assign(link)
+	  	}
+	  	else {
+	  		console.log("not complete")
+	  	}
+	});
+}, 3000);
+
+</script>
+
+
+{% endblock %}
