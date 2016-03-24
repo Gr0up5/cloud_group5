@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db import connection
 import psycopg2
 import time
 # Create your views here.
@@ -553,6 +554,7 @@ def delete(request):
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
 
+        tmp_vm_name = your_vm.name
 	state = State.objects.get(vm_name=your_vm.name)
 	state.delete()
 	cube = Cube.objects.get(vm_name=your_vm.name)
@@ -562,6 +564,9 @@ def delete(request):
 	storage = Storage.objects.get(vm_name=your_vm.name)
 	storage.delete()
 	your_vm.delete()
+
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM tiramisu_rawdata WHERE vm_name = %s", [tmp_vm_name])
 
 	user = User.objects.get(id=request.session['user_id'])
 	user_id = user.id
