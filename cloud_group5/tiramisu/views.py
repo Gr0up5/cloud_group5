@@ -256,13 +256,20 @@ def move(request):
 
 	id_vm = request.GET['id']
 	current_vm = VM.objects.get(id=id_vm)
+	# try:
+	# 	command = './call_move ' + current_vm.name
+	# 	subprocess.check_call(['python','client_socket_call.py',command])
+	# except:
+	# 	return HttpResponseRedirect("/tiramisu/servererror")
+	# link = "../details/?id=" + id_vm
+	# return HttpResponseRedirect(link)
 	try:
 		command = './call_move ' + current_vm.name
-		subprocess.check_call(['python','client_socket_call.py',command])
+		subprocess.check_call(['python','client_socket_init.py',command])
+		link = "/tiramisu/wait_move/?vm_name=" + current_vm.name
+		return HttpResponseRedirect(link)
 	except:
 		return HttpResponseRedirect("/tiramisu/servererror")
-	link = "../details/?id=" + id_vm
-	return HttpResponseRedirect(link)
 
 def turnoff(request):
 	id_vm = request.GET['id']
@@ -335,6 +342,18 @@ def vmname_availability(request):
 			except VM.DoesNotExist:
 				vmObject = None
 			if vmObject == None:
+				response_data = {'result' : 'pos'}
+			else:
+				response_data = {'result' : 'neg'}
+			return JsonResponse(response_data)
+
+@csrf_exempt
+def checkstartvm(request):
+	if not request.session.is_empty() or request.user.is_anonymous():
+		if request.method == 'POST':
+			vm_name = request.POST.get('vm_name')
+			vm = VM.objects.get(name=vm_name)
+			if vm.status == 1:
 				response_data = {'result' : 'pos'}
 			else:
 				response_data = {'result' : 'neg'}
@@ -441,14 +460,25 @@ def wait_create(request):
 	try:
 		vm_name = request.GET['vm_name']
 		template = loader.get_template('wait_create.html')
-		user = User.objects.get(id=request.session['user_id'])
-		user_id = user.id
-		vm = VM.objects.filter(owner=user_id)
 		context = RequestContext(request, {
-			'name': user.username,
-			'id': user.id,
-			'vm_list': vm,
 			'vm_name':vm_name
+		})
+		return HttpResponse(template.render(context))
+	except:
+		return HttpResponseRedirect("/tiramisu/servererror")
+
+@csrf_exempt
+def wait_move(request):
+	try:
+		vm_name = request.GET['vm_name']
+		your_vm = VM.objects.get(name=vm_name)
+		storage = Storage.objects.get(vm_name=vm_name)
+		new_pool = storage.appropiate_pool
+		template = loader.get_template('wait_move.html')
+		context = RequestContext(request, {
+			'vm_name': vm_name,
+			'new_pool': new_pool,
+			'vm_id': your_vm.id
 		})
 		return HttpResponse(template.render(context))
 	except:
