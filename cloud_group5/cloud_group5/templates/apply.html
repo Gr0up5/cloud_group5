@@ -16,6 +16,43 @@
 	<br>
 		<input type="hidden" name="name" value={{id_vm}}>
 		
+		<div class="box box-solid box-default">
+		<div class="box-header"><h4>Application type</h4></div>
+			<div class="box-body">
+				<div class="radio">
+					<label>
+						{% if web %}
+							<input type="radio" name="type" id="web" value="1" checked>
+						{% else %}
+							<input type="radio" name="type" id="web" value="1">
+						{% endif %}
+						Website
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						{% if db %}
+							<input type="radio" name="type" id="db" value="2" checked>
+						{% else %}
+							<input type="radio" name="type" id="db" value="2">
+						{% endif %}
+						Database (Write a lot of data)
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						{% if bj %}
+							<input type="radio" name="type" id="bj" value="3" checked>
+						{% else %}
+							<input type="radio" name="type" id="bj" value="3">
+						{% endif %}
+						Batch job
+					</label>
+				</div>
+
+			</div>
+		</div>
+
 		<div class="box box-success">
 			<div class="box-header">
 				<h3 class="box-title">Latency</h3>
@@ -119,42 +156,7 @@
 
 		</div>
 
-		<div class="box box-solid box-default">
-		<div class="box-header"><h4>Application type</h4></div>
-			<div class="box-body">
-				<div class="radio">
-					<label>
-						{% if web %}
-							<input type="radio" name="type" id="web" value="1" checked>
-						{% else %}
-							<input type="radio" name="type" id="web" value="1">
-						{% endif %}
-						Website
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						{% if db %}
-							<input type="radio" name="type" id="db" value="2" checked>
-						{% else %}
-							<input type="radio" name="type" id="db" value="2">
-						{% endif %}
-						Database (Write a lot of data)
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						{% if bj %}
-							<input type="radio" name="type" id="bj" value="3" checked>
-						{% else %}
-							<input type="radio" name="type" id="bj" value="3">
-						{% endif %}
-						Batch job
-					</label>
-				</div>
-
-			</div>
-		</div>
+		
 
 	<br>
 	<div class="info-box bg-green">
@@ -167,24 +169,55 @@
 			<div class="row">
 		{% else %}
 			<span class="info-box-text"><h3>{{ appropiate_pool }}</h3></span>
-			<div class="col-md-2">
-				<p>Latency</p>
+			
+			<div class="row">
+				<div class="col-md-2">
+					<p>Latency</p>
+				</div>
+				<div class="col-md-2">
+					<p class="info-box-number">{{ appropiate_latency }} ms</p>
+				</div>
+				<div class="col-md-7">
+					{% if green_latency %}
+						<p style="color:green;">(- {{ diff_latency }})</p>
+					{% else %}
+						<p style="color:red;">(+ {{ diff_latency }})</p>
+					{% endif %}
+				</div>
 			</div>
-			<div class="col-md-10">
-				<p class="info-box-number">{{ appropiate_latency }} ms</p>
+
+			<div class="row">
+				<div class="col-md-2">
+					<p>Throughput</p>
+				</div>
+				<div class="col-md-2">
+					<p class="info-box-number">{{ appropiate_iops }} IOPS</p>
+				</div>
+				<div class="col-md-7">
+					{% if green_iops %}
+						<p style="color:green;">(+ {{ diff_iops }})</p>
+					{% else %}
+						<p style="color:red;">(- {{ diff_iops }})</p>
+					{% endif %}
+				</div>
 			</div>
-			<div class="col-md-2">
-				<p>Throughput</p>
+			
+			<div class="row">
+				<div class="col-md-2">
+					<p>Cost</p>
+				</div>
+				<div class="col-md-2">
+					<p class="info-box-number">{{ cost }} THB</p>
+				</div>
+				<div class="col-md-7">
+					{% if green_cost %}
+						<p style="color:green;">(- {{ diff_cost }})</p>
+					{% else %}
+						<p style="color:red;">(+ {{ diff_cost }})</p>
+					{% endif %}
+				</div>
 			</div>
-			<div class="col-md-10">
-				<p class="info-box-number">{{ appropiate_iops }} IOPS</p>
-			</div>
-			<div class="col-md-2">
-				<p>Cost</p>
-			</div>
-			<div class="col-md-10">
-				<p class="info-box-number">{{ cost }} THB</p>
-			</div>
+
 			<div class="row">
 				<div class="col-md-1">
 					<a href="../move/?id={{id_vm}}"><button type="button" class="btn btn-primary">Accept</button></a>

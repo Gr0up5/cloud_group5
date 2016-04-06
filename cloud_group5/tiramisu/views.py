@@ -76,6 +76,7 @@ def manage(request):
 		web = 0
 		db = 0
 		bj = 1
+	delegate_state = find_delegate_state()
 	context = RequestContext(request, {
 		'id_vm': id_vm,
 		'name': user.username,
@@ -86,7 +87,8 @@ def manage(request):
 		'db': db,
 		'bj': bj,
 		'current_name': current_vm.name_display,
-		'apply': 0 })
+		'apply': 0,
+		'delegate_state': delegate_state })
    	return HttpResponse(template.render(context))
 
 def cal_percent(pc, data):
@@ -178,6 +180,27 @@ def change_requirements(request):
 			change = 0
 		else:
 			change = 1
+
+		diff_latency = state.latency - appropiate_latency
+		diff_iops = appropiate_iops - state.iops
+		diff_cost = current_vm.cost - cost
+
+		if diff_latency >= 0 :
+			green_latency = 1
+		else:
+			green_latency = 0
+
+		if diff_iops >= 0 :
+			green_iops = 1
+		else:
+			green_iops = 0
+
+		if diff_cost >= 0 :
+			green_cost = 1
+		else:
+			green_cost = 0
+
+
 		context = RequestContext(request, {
 			'id_vm': id_vm,
 			'name': user.username,
@@ -194,7 +217,13 @@ def change_requirements(request):
 			'appropiate_iops': appropiate_iops,
 			'appropiate_latency': appropiate_latency,
 			'cost': cost,
-			'change': change, })
+			'change': change,
+			'diff_latency': abs(diff_latency),
+			'diff_iops': abs(diff_iops),
+			'diff_cost': abs(diff_cost),
+			'green_latency': green_latency,
+			'green_iops': green_iops,
+			'green_cost': green_cost })
 		return HttpResponse(template.render(context))
 	else:
 		return HttpResponseRedirect("/tiramisu/index")
@@ -210,6 +239,9 @@ def registersuccess(request):
 	return HttpResponseRedirect('/')
 
 def showdetails(request):
+	cost_SSD = 773.0937
+	cost_HDD = 429.49
+
 	user = User.objects.get(id=request.session['user_id'])
 	user_id = user.id
 	vm = VM.objects.filter(owner=user_id)
@@ -220,8 +252,15 @@ def showdetails(request):
 	storage = Storage.objects.get(vm_name=current_vm.name)
 	if storage.current_pool == 'HDD':
 		hdd = 1
+		new_iops = state.iops_ssd
+		new_latency = state.latency_ssd
+		new_cost = cost_SSD
 	else:
 		hdd = 0
+		new_iops = state.iops_hdd
+		new_latency = state.latency_hdd
+		new_cost = cost_HDD
+
 	if storage.current_pool != storage.appropiate_pool and storage.notice:
 		notice = 1
 	else:
@@ -241,7 +280,10 @@ def showdetails(request):
 		'notice': notice,
 		'turnoff': turnoff,
 		'hdd': hdd,
-		'rusure': 0 })
+		'rusure': 0,
+		'new_iops': new_iops,
+		'new_latency': new_latency,
+		'new_cost': new_cost })
    	return HttpResponse(template.render(context))
 
 def move(request):
@@ -374,6 +416,17 @@ def checkusername(request):
 			response_data = {'result' : 'neg'}
 		return JsonResponse(response_data)
 
+def find_delegate_state():
+	hdd_delegate = Storage.objects.filter(current_pool='SSD').values()[0]['vm_name'] # b'cuz i want avg of hdd
+	ssd_delegate = Storage.objects.filter(current_pool='HDD').values()[0]['vm_name']
+	hdd_delegate_state = State.objects.get(vm_name=hdd_delegate)
+	ssd_delegate_state = State.objects.get(vm_name=ssd_delegate)
+
+	return {	'hdd_latency': hdd_delegate_state.latency_hdd,
+				'hdd_iops': hdd_delegate_state.iops_hdd,
+				'ssd_latency': ssd_delegate_state.latency_ssd,
+				'ssd_iops': ssd_delegate_state.iops_ssd	}
+
 def createvm(request):
 	try:
 		subprocess.check_call(['python','client_socket_check.py','./check_disk_space'])
@@ -392,10 +445,12 @@ def createvm(request):
 			user = User.objects.get(id=request.session['user_id'])
 			user_id = user.id
 			vm = VM.objects.filter(owner=user_id)
+			delegate_state = find_delegate_state()
 			context = RequestContext(request, {
 				'name': user.username,
 				'id': user.id,
 				'vm_list': vm,
+				'delegate_state': delegate_state
 			})
    			return HttpResponse(template.render(context))
 
