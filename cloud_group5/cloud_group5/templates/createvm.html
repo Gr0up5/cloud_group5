@@ -223,6 +223,9 @@ $(document).ready(function () {
   	//auto fill by type
   	$('form input[type=radio]').change(function() {
   		app_type = $("form input[type='radio']:checked").val()
+  		$("#latency").val(0);
+  		$("#iops_min").val(0);
+  		$("#cost").val(0);
 	  	if (app_type == 1) {
 	  		if ( parseInt($("#hdd_latency").text()) > parseInt($("#ssd_latency").text()) ) {
 				$("#latency_max").val($("#ssd_latency").text());
