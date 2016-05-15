@@ -23,7 +23,7 @@
 	      		We recommend you to move your VM for better performance.<br>
 	      		<br>
 	      		Suggested storage performance.<br>
-	      		IOPS {{new_iops}}<br>
+	      		Throughput {{new_iops}} IOPS<br>
 	      		Latency {{new_latency}}<br>
 	      		Cost {{new_cost}}
 
@@ -72,7 +72,7 @@
 			</div>
 			<!-- _________________________________________________________ -->
 			<div class="col-xs-6">
-				<div class="pull-right"><b>Appropiate storage</b></div>
+				<div class="pull-right"><b>Appropriate storage</b></div>
 			</div>
 			<div class="col-xs-6">
 				<div>{{storage.appropiate_pool}}</div>
@@ -94,7 +94,7 @@
 			<!-- _________________________________________________________ -->
 			<div class="col-xs-12">
 				<div class="text-center">
-					<h4><b>Performance of current storage</b></h4>
+					<h4><b>Performance of application</b></h4>
 				</div>
 			</div>
 			<!-- _________________________________________________________ -->
@@ -106,10 +106,39 @@
 			</div>
 			<!-- _________________________________________________________ -->
 			<div class="col-xs-6">
-				<div class="pull-right"><b>IOPS</b></div>
+				<div class="pull-right"><b>Throughput</b></div>
 			</div>
 			<div class="col-xs-6">
-				<div>{{state.iops}}</div>
+				<div>{{state.iops}} IOPS</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-xs-12">
+				<div class="text-center">
+					<h4><b>Performance of current storage</b></h4>
+				</div>
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-xs-6">
+				<div class="pull-right"><b>Latency</b></div>
+			</div>
+			<div class="col-xs-6">
+			{% if hdd %}
+				<div>{{state.latency_hdd}} ms</div>
+			{% else %}
+				<div>{{state.latency_ssd}} ms</div>
+			{% endif %}
+			
+			</div>
+			<!-- _________________________________________________________ -->
+			<div class="col-xs-6">
+				<div class="pull-right"><b>Throughput</b></div>
+			</div>
+			<div class="col-xs-6">
+			{% if hdd %}
+				<div>{{state.iops_hdd}} IOPS</div>
+			{% else %}
+				<div>{{state.iops_ssd}} IOPS</div>
+			{% endif %}
 			</div>
 			<!-- _________________________________________________________ -->
 
